@@ -10,9 +10,12 @@
     [ring/ring-core "1.3.2"]
     [http-kit "2.0.0"]
     [environ "1.0.0"]]
+  :dev-dependencies [[com.jakemccrary/lein-test-refresh "0.5.5"]]
   :main engine-server.web
   :min-lein-version "2.0.0"
   :plugins [[environ/environ.lein "0.3.1"]]
   :hooks [environ.leiningen.hooks]
   :uberjar-name "espaco-guerra-engine-standalone.jar"
-  :profiles {:production {:env {:production true}}})
+  :profiles {:production {:env {:production true}}
+    :dev {:plugins [[com.jakemccrary/lein-test-refresh "0.5.5"]]}}
+  :test-refresh {:notify-command ["terminal-notifier" "-title" "Engine Server Tests" "-message"]})

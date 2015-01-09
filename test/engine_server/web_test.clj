@@ -4,8 +4,3 @@
   )
 )
 
-(deftest a-test
-  (testing "FIXME, I always pass."
-    (is (= 1 1))
-  )
-)
