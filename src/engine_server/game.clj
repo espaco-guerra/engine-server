@@ -2,7 +2,7 @@
   (:require [engine-server.engine :refer [next-frame]]
     [engine-server.body-builder :refer :all]))
 
-(def time-interval 1000)
+(def time-interval 100)
 (def base-planet (with-mass 1e6 body))
 (def base-player (with-mass 1.0 body))
 (def base-positions [[-1000.0 0.0]
