@@ -1,5 +1,5 @@
 (ns engine-server.web
-  (:use org.httpkit.server)
+  (:use org.httpkit.server engine-server.game)
   (:require
     [ring.middleware.reload :as reload]
     [compojure.handler :refer [site]]
@@ -7,6 +7,7 @@
     [compojure.route :as route]
     [clojure.java.io :as io]
     [environ.core :refer [env]]
+    [org.httpkit.timer :refer [schedule-task]]
   )
 )
 
@@ -18,23 +19,29 @@
   }
 )
 
-(defn handler [req]
-  (with-channel req channel              ; get the channel
-    ;; communicate with client using method defined above
-    (on-close channel (fn [status]
-                        (println "channel closed")))
-    (if (websocket? channel)
-      (println "WebSocket channel")
-      (println "HTTP channel"))
-    (on-receive channel (fn [data]       ; data received from client
-           ;; An optional param can pass to send!: close-after-send?
-           ;; When unspecified, `close-after-send?` defaults to true for HTTP channels
-           ;; and false for WebSocket.  (send! channel data close-after-send?)
-                          (send! channel data))))) ; data is sent directly to the client
+(defn kill-player [game player-id]
+  (remove-player (game :universe) player-id)
+  )
+
+(defn send-universe [game channel]
+  (send! channel (str (game :universe) "<br/>\n") false)
+  (schedule-task (game :step)
+     (send-universe (iterate-game game []) channel)))
+
+(defn connect [game-info]
+  (fn [req]
+    (with-channel req channel
+      (on-close channel (fn [status] (kill-player (game-info :game) (game-info :player))))
+      (send-universe (game-info :game) channel)
+      (on-receive channel (fn [data] (println (str data)))))))
+
+(defn my-game-info [id]
+  (let [game (find-or-create-game id)]
+    {:player (inc (game :players)) :game (add-player-to-game game)}))
 
 (defroutes all-routes
   (GET "/" [] (splash))
-  (GET "/save" [] handler)     ;; websocket
+  (GET "/join/:id" [id] (connect (my-game-info id)))     ;; websocket
   (ANY "*" [] (route/not-found (slurp (io/resource "404.html")))))
 
 
