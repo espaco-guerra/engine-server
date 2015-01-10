@@ -8,6 +8,7 @@
     [clojure.java.io :as io]
     [environ.core :refer [env]]
     [org.httpkit.timer :refer [schedule-task]]
+    [clojure.data.json :as json]
   )
 )
 
@@ -19,29 +20,40 @@
   }
 )
 
-(defn kill-player [game player-id]
-  (remove-player (game :universe) player-id)
-  )
+(def games (atom {}))
+(def clients (atom {}))
 
-(defn send-universe [game channel]
-  (send! channel (str (game :universe) "<br/>\n") false)
-  (schedule-task (game :step)
-     (send-universe (iterate-game game []) channel)))
+(defn find-or-create-game [id]
+  (if (nil? (@games id))
+    (swap! games assoc id (new-game id 0)))
+  (@games id))
 
-(defn connect [game-info]
+(defn connect-to-game-id [id]
   (fn [req]
     (with-channel req channel
-      (on-close channel (fn [status] (kill-player (game-info :game) (game-info :player))))
-      (send-universe (game-info :game) channel)
-      (on-receive channel (fn [data] (println (str data)))))))
-
-(defn my-game-info [id]
-  (let [game (find-or-create-game id)]
-    {:player (inc (game :players)) :game (add-player-to-game game)}))
+      (let [game (find-or-create-game id)
+        player (inc (game :players))]
+        (swap! games assoc id (add-player-to-game game))
+        (swap! clients assoc channel {:game-id id :player player}))
+      (on-close channel (fn [status]
+        (let [game (find-or-create-game id)
+          player ((@clients channel) :player)]
+          (println (str "Closing channel! :( Player " player " gave up"))
+          (swap! games assoc id (remove-player-from-game game player))
+          (swap! clients dissoc channel) )))
+      (future (loop []
+        (let [game (iterate-game (find-or-create-game id) [])]
+          (swap! games assoc id game)
+          (doseq [client @clients]
+            (send! channel (json/write-str (game :universe)) (over? game)))
+          (Thread/sleep (game :step))
+          (if (not (over? game)) (recur)))))
+      (on-receive channel (fn [data] (println (str data))))
+    )))
 
 (defroutes all-routes
   (GET "/" [] (splash))
-  (GET "/join/:id" [id] (connect (my-game-info id)))     ;; websocket
+  (GET "/join/:id" [id] (connect-to-game-id id))     ;; websocket
   (ANY "*" [] (route/not-found (slurp (io/resource "404.html")))))
 
 

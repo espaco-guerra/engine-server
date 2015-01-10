@@ -16,26 +16,37 @@
     {(keyword (str "player" (inc n)))
     (with-position ((base-positions n) 0) ((base-positions n) 1) base-player)}))
 
-(defn remove-player [universe n]
+(defn remove-player-from-universe [universe n]
   (dissoc universe
     (keyword (str "player" n))))
 
 (defn new-universe [players]
   (reduce add-player-to-universe base-universe (range (or players 0))))
 
-(defn new-game [total-players]
-  {:step time-interval :universe (new-universe total-players) :players total-players})
-
-(defn find-or-create-game [id]
-  (let [total-players 0]
-    (new-game total-players)))
+(defn new-game [id total-players]
+  {
+    :id id
+    :step time-interval
+    :universe (new-universe total-players)
+    :players total-players
+  })
 
 (defn add-player-to-game [game]
   (merge
     game
-    {:universe (add-player-to-universe (game :universe) (game :players))}))
+    {:universe (add-player-to-universe (game :universe) (game :players))
+      :players (inc (game :players))}))
+
+(defn remove-player-from-game [game player]
+  (merge
+    game
+    {:universe (remove-player-from-universe (game :universe) player)
+      :players (dec (game :players))}))
 
 (defn iterate-game [game commands]
   (merge
-    (new-game (game :players))
+    (new-game (game :id) (game :players))
     {:universe (next-frame (game :step) (game :universe) commands)}))
+
+(defn over? [game]
+  (== (game :players) 0))
