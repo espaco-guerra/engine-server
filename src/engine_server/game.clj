@@ -9,7 +9,7 @@
   [1000.0 0.0]
   [0.0 1000.0]
   [0.0 -1000.0]])
-(def base-universe {:planet1 base-planet :width 800 :height 600})
+(def base-universe {:planet1 base-planet})
 
 (defn add-player-to-universe [universe n]
   (merge universe 
