@@ -3,13 +3,13 @@
     [engine-server.body-builder :refer :all]))
 
 (def time-interval 100)
-(def base-planet (with-mass 1e6 body))
+(def base-planet (with-diameter 100 (with-mass 1e6 body)))
 (def base-player (with-mass 1.0 body))
 (def base-positions [[-1000.0 0.0]
   [1000.0 0.0]
   [0.0 1000.0]
   [0.0 -1000.0]])
-(def base-universe {:planet1 base-planet})
+(def base-universe {:planet1 base-planet :width 800 :height 600})
 
 (defn add-player-to-universe [universe n]
   (merge universe 
