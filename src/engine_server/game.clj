@@ -3,25 +3,27 @@
     [engine-server.body-builder :refer :all]))
 
 (def time-interval 100)
-(def base-planet (with-diameter 100 (with-mass 1e6 body)))
-(def base-player (with-mass 1.0 body))
-(def base-positions [[-1000.0 0.0]
-  [1000.0 0.0]
-  [0.0 1000.0]
-  [0.0 -1000.0]])
-(def base-universe {:planet1 base-planet})
+(def base-planet (with-diameter 2000.0 (with-mass 1e6 body)))
+(def base-player (with-diameter 100.0 (with-mass 1.0 body)))
+(def base-positions [[-4000.0 0.0]
+  [4000.0 0.0]
+  [0.0 4000.0]
+  [0.0 -4000.0]])
+(def base-bodies {:planet1 base-planet})
+(def base-universe {:width 4e10 :height 3e10 :bodies {}})
 
-(defn add-player-to-universe [universe n]
-  (merge universe 
+(defn add-ship-to-bodies [bodies n]
+  (merge bodies
     {(keyword (str "player" (inc n)))
     (with-position ((base-positions n) 0) ((base-positions n) 1) base-player)}))
 
-(defn remove-player-from-universe [universe n]
-  (dissoc universe
+(defn remove-ship-from-bodies [bodies n]
+  (dissoc bodies
     (keyword (str "player" n))))
 
 (defn new-universe [players]
-  (reduce add-player-to-universe base-universe (range (or players 0))))
+  (merge base-universe
+    {:bodies (reduce add-ship-to-bodies base-bodies (range (or players 0)))}))
 
 (defn new-game [id total-players]
   {
@@ -32,21 +34,31 @@
   })
 
 (defn add-player-to-game [game]
-  (merge
-    game
-    {:universe (add-player-to-universe (game :universe) (game :players))
-      :players (inc (game :players))}))
+  (let [
+    universe (game :universe)
+    bodies (universe :bodies)
+    players (game :players)]
+    (merge game
+      {:universe (merge universe {:bodies (add-ship-to-bodies bodies players)})
+      :players (inc (game :players))})
+  ))
 
 (defn remove-player-from-game [game player]
-  (merge
-    game
-    {:universe (remove-player-from-universe (game :universe) player)
-      :players (dec (game :players))}))
+  (let [
+    universe (game :universe)
+    bodies (universe :bodies)
+    players (game :players)]
+    (merge game
+      {:universe (merge universe {:bodies (remove-ship-from-bodies bodies player)})
+      :players (max 0 (dec (game :players)))})
+  ))
 
 (defn iterate-game [game commands]
-  (merge
-    (new-game (game :id) (game :players))
-    {:universe (next-frame (game :step) (game :universe) commands)}))
+  (merge game
+    {:universe (merge
+      (game :universe)
+      {:bodies (next-frame (game :step) ((game :universe) :bodies) commands)})
+    }))
 
 (defn over? [game]
   (== (game :players) 0))

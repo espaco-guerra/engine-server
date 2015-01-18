@@ -12,14 +12,6 @@
   )
 )
 
-(defn splash []
-  {
-    :status 200
-    :headers {"Content-Type" "text/plain"}
-    :body (pr-str ["Hello" :from 'Engine])
-  }
-)
-
 (def games (atom {}))
 (def clients (atom {}))
 
@@ -52,7 +44,6 @@
     )))
 
 (defroutes all-routes
-  (GET "/" [] (splash))
   (GET "/join/:id" [id] (connect-to-game-id id))     ;; websocket
   (ANY "*" [] (route/not-found (slurp (io/resource "404.html")))))
 
@@ -65,4 +56,3 @@
                   (site all-routes))
         port (Integer. (or port (env :port) 5000))]
     (run-server handler {:port port :join? false})))
-
