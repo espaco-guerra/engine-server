@@ -2,15 +2,16 @@
   (:require [engine-server.engine :refer [next-frame]]
     [engine-server.body-builder :refer :all]))
 
-(def time-interval 100)
-(def base-planet (with-diameter 2000.0 (with-mass 1e6 body)))
-(def base-player (with-diameter 100.0 (with-mass 1.0 body)))
-(def base-positions [[-4000.0 0.0]
-  [4000.0 0.0]
-  [0.0 4000.0]
-  [0.0 -4000.0]])
+(def time-interval (/ 1000.0 60.0)); 60fps
+(def orbit-distance 431000.0)
+(def base-planet (with-diameter 1200.0 (with-mass 6e12 body)))
+(def base-player (with-diameter 400.0 (with-mass 4.0 body)))
+(def base-positions [[(- orbit-distance) 0.0]
+  [orbit-distance 0.0]
+  [0.0 orbit-distance]
+  [0.0 (- orbit-distance)]])
 (def base-bodies {:planet1 base-planet})
-(def base-universe {:width 4e10 :height 3e10 :bodies {}})
+(def base-universe {:width 4e4 :height 3e4 :bodies {}})
 
 (defn add-ship-to-bodies [bodies n]
   (merge bodies

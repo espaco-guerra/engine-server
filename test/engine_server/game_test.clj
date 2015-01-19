@@ -6,25 +6,25 @@
 
 (deftest add-ship-to-bodies-test
   (testing "adding a ship to empty bodies leaves just the ship"
-    (is (= {:player1 (with-position -4000.0 0.0 base-player)}
+    (is (= {:player1 (with-position (- orbit-distance) 0.0 base-player)}
           (add-ship-to-bodies {} 0))))
   (testing "adding a ship to other bodies just adds the ship"
     (is
       (=
         {:planet1 base-planet
-          :player1 (with-position -4000.0 0.0 base-player)
-          :player2 (with-position 4000.0 0.0 base-player)}
+          :player1 (with-position (- orbit-distance) 0.0 base-player)
+          :player2 (with-position orbit-distance 0.0 base-player)}
         (add-ship-to-bodies {:planet1 base-planet
-          :player1 (with-position -4000.0 0.0 base-player)} 1))))
+          :player1 (with-position (- orbit-distance) 0.0 base-player)} 1))))
   (testing "adding a ship that is already there replaces the ship"
     (is
       (=
         {:planet1 base-planet
-          :player1 (with-position -4000.0 0.0 base-player)
-          :player2 (with-position 4000.0 0.0 base-player)}
+          :player1 (with-position (- orbit-distance) 0.0 base-player)
+          :player2 (with-position orbit-distance 0.0 base-player)}
         (add-ship-to-bodies {:planet1 base-planet
-          :player1 (with-position -4000.0 0.0 base-player)
-          :player2 (with-position 8000.0 0.0 base-player)} 1))))
+          :player1 (with-position (- orbit-distance) 0.0 base-player)
+          :player2 (with-position 200.0 0.0 base-player)} 1))))
 )
 
 (deftest remove-ship-from-bodies-test
@@ -36,33 +36,33 @@
       (=
         {}
         (remove-ship-from-bodies
-          {:player1 (with-position -4000.0 0.0 base-player)} 1))))
+          {:player1 (with-position (- orbit-distance) 0.0 base-player)} 1))))
   (testing "removing second ship from others removes that ship"
     (is
       (=
-        {:player1 (with-position -4000.0 0.0 base-player)}
+        {:player1 (with-position (- orbit-distance) 0.0 base-player)}
         (remove-ship-from-bodies
-          {:player1 (with-position -4000.0 0.0 base-player)
-          :player2 (with-position 4000.0 0.0 base-player)} 2))))
+          {:player1 (with-position (- orbit-distance) 0.0 base-player)
+          :player2 (with-position (- orbit-distance) 0.0 base-player)} 2))))
 )
 
 (deftest new-universe-test
   (testing "new-universe with no players creates only 1 planet"
-    (is (= {:width 4e10 :height 3e10 :bodies {:planet1 base-planet}} (new-universe nil))))
+    (is (= {:width 4e4 :height 3e4 :bodies {:planet1 base-planet}} (new-universe nil))))
   (testing "new-universe with negative players creates only 1 planet"
-    (is (= {:width 4e10 :height 3e10 :bodies {:planet1 base-planet}} (new-universe -1))))
+    (is (= {:width 4e4 :height 3e4 :bodies {:planet1 base-planet}} (new-universe -1))))
   (testing "new-universe with 0 players creates only 1 planet"
-    (is (= {:width 4e10 :height 3e10 :bodies {:planet1 base-planet}} (new-universe 0))))
+    (is (= {:width 4e4 :height 3e4 :bodies {:planet1 base-planet}} (new-universe 0))))
   (testing "new-universe with 1 player creates a planet and player falling"
-    (is (= {:width 4e10 :height 3e10 :bodies {
+    (is (= {:width 4e4 :height 3e4 :bodies {
       :planet1 base-planet
-      :player1 (with-position -4000.0 0.0 base-player)
+      :player1 (with-position (- orbit-distance) 0.0 base-player)
       }} (new-universe 1))))
   (testing "new-universe with 2 players creates a planet and 2 opposite players falling"
-    (is (= {:width 4e10 :height 3e10 :bodies {
+    (is (= {:width 4e4 :height 3e4 :bodies {
       :planet1 base-planet
-      :player1 (with-position -4000.0 0.0 base-player)
-      :player2 (with-position 4000.0 0.0 base-player)
+      :player1 (with-position (- orbit-distance) 0.0 base-player)
+      :player2 (with-position orbit-distance 0.0 base-player)
       }} (new-universe 2))))
 )
 
@@ -130,8 +130,8 @@
       {
         :id :id
         :step time-interval
-        :universe {:width 4e10 :height 3e10 :bodies 
-          (engine-server.engine/next-frame 100
+        :universe {:width 4e4 :height 3e4 :bodies 
+          (engine-server.engine/next-frame time-interval
             (((new-game :id 1) :universe) :bodies) [])
         }
         :players 1
