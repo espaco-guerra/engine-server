@@ -48,18 +48,18 @@
 
 (deftest new-universe-test
   (testing "new-universe with no players creates only 1 planet"
-    (is (= {:width 4e4 :height 3e4 :bodies {:planet1 base-planet}} (new-universe nil))))
+    (is (= {:dimensions [4e6 3e6] :bodies {:planet1 base-planet}} (new-universe nil))))
   (testing "new-universe with negative players creates only 1 planet"
-    (is (= {:width 4e4 :height 3e4 :bodies {:planet1 base-planet}} (new-universe -1))))
+    (is (= {:dimensions [4e6 3e6] :bodies {:planet1 base-planet}} (new-universe -1))))
   (testing "new-universe with 0 players creates only 1 planet"
-    (is (= {:width 4e4 :height 3e4 :bodies {:planet1 base-planet}} (new-universe 0))))
+    (is (= {:dimensions [4e6 3e6] :bodies {:planet1 base-planet}} (new-universe 0))))
   (testing "new-universe with 1 player creates a planet and player falling"
-    (is (= {:width 4e4 :height 3e4 :bodies {
+    (is (= {:dimensions [4e6 3e6] :bodies {
       :planet1 base-planet
       :player1 (with-position (- orbit-distance) 0.0 base-player)
       }} (new-universe 1))))
   (testing "new-universe with 2 players creates a planet and 2 opposite players falling"
-    (is (= {:width 4e4 :height 3e4 :bodies {
+    (is (= {:dimensions [4e6 3e6] :bodies {
       :planet1 base-planet
       :player1 (with-position (- orbit-distance) 0.0 base-player)
       :player2 (with-position orbit-distance 0.0 base-player)
@@ -130,9 +130,9 @@
       {
         :id :id
         :step time-interval
-        :universe {:width 4e4 :height 3e4 :bodies 
+        :universe {:dimensions [4e6 3e6] :bodies 
           (engine-server.engine/next-frame time-interval
-            (((new-game :id 1) :universe) :bodies) [])
+            ((new-game :id 1) :universe) [])
         }
         :players 1
       }

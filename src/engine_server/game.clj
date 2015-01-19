@@ -3,15 +3,15 @@
     [engine-server.body-builder :refer :all]))
 
 (def time-interval (/ 1000.0 60.0)); 60fps
-(def orbit-distance 431000.0)
-(def base-planet (with-diameter 1200.0 (with-mass 6e12 body)))
-(def base-player (with-diameter 400.0 (with-mass 4.0 body)))
+(def orbit-distance 800000.0)
+(def base-planet (with-diameter 200000.0 (with-mass 6e9 body)))
+(def base-player (with-diameter 40000.0 (with-mass 1.0 body)))
 (def base-positions [[(- orbit-distance) 0.0]
   [orbit-distance 0.0]
   [0.0 orbit-distance]
   [0.0 (- orbit-distance)]])
 (def base-bodies {:planet1 base-planet})
-(def base-universe {:width 4e4 :height 3e4 :bodies {}})
+(def base-universe {:dimensions [4e6 3e6] :bodies {}})
 
 (defn add-ship-to-bodies [bodies n]
   (merge bodies
@@ -58,7 +58,7 @@
   (merge game
     {:universe (merge
       (game :universe)
-      {:bodies (next-frame (game :step) ((game :universe) :bodies) commands)})
+      {:bodies (next-frame (game :step) (game :universe) commands)})
     }))
 
 (defn over? [game]

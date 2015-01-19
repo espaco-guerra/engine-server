@@ -37,8 +37,8 @@
   (iterate-with-time (body :position) velocity timestep))
 
 (defn new-body [time-interval other-bodies body]
-  (let [acceleration (acceleration-for body other-bodies)]
-    (let [velocity (new-velocity body acceleration time-interval)]
+  (let [acceleration (acceleration-for body other-bodies)
+    velocity (new-velocity body acceleration time-interval)]
       (merge body {:position (iterate-position body velocity time-interval)
-        :velocity velocity}))))
+        :velocity velocity})))
 
