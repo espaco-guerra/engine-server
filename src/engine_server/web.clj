@@ -8,15 +8,13 @@
     [clojure.java.io :as io]
     [environ.core :refer [env]]
     [org.httpkit.timer :refer [schedule-task]]
-    [clojure.data.json :as json]
-  )
-)
+    [clojure.data.json :as json]))
 
 (def games (atom {}))
 (def clients (atom {}))
 
 (defn find-or-create-game [id]
-  (if (nil? (@games id))
+  (when-not (@games id)
     (swap! games assoc id (new-game id 0)))
   (@games id))
 
