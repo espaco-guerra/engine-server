@@ -29,7 +29,7 @@
       (on-close channel (fn [status]
         (let [game (find-or-create-game id)
           player (:player (@clients channel))]
-          (println (str "Closing channel! :( Player " player " gave up"))
+          (println "Closing channel! :( Player" player "gave up")
           (swap! games assoc id (remove-player-from-game game player))
           (swap! clients dissoc channel) )))
       (future (loop []
