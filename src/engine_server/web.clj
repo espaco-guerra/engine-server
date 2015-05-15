@@ -39,8 +39,7 @@
             (send! channel (json/write-str (:universe game)) (over? game)))
           (Thread/sleep (:step game))
           (if (not (over? game)) (recur)))))
-      (on-receive channel (fn [data] (println (str data))))
-    )))
+      (on-receive channel (fn [data] (println (str data)))))))
 
 (defroutes all-routes
   (GET "/join/:id" [id] (connect-to-game-id id))     ;; websocket
@@ -52,5 +51,5 @@
   (let [handler (if (in-dev?)
                   (reload/wrap-reload (site #'all-routes)) ;; only reload when dev
                   (site all-routes))
-        port (Integer. (or port (env :port) 5000))]
+        port (int (or port (env :port) 5000))]
     (run-server handler {:port port :join? false})))
