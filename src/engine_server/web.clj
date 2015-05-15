@@ -11,6 +11,7 @@
     [clojure.data.json :as json]))
 
 (def games (atom {}))
+
 (def clients (atom {}))
 
 (defn find-or-create-game [id]
@@ -22,12 +23,12 @@
   (fn [req]
     (with-channel req channel
       (let [game (find-or-create-game id)
-        player (inc (game :players))]
+        player (inc (:players game))]
         (swap! games assoc id (add-player-to-game game))
         (swap! clients assoc channel {:game-id id :player player}))
       (on-close channel (fn [status]
         (let [game (find-or-create-game id)
-          player ((@clients channel) :player)]
+          player (:player (@clients channel))]
           (println (str "Closing channel! :( Player " player " gave up"))
           (swap! games assoc id (remove-player-from-game game player))
           (swap! clients dissoc channel) )))
@@ -35,8 +36,8 @@
         (let [game (iterate-game (find-or-create-game id) [])]
           (swap! games assoc id game)
           (doseq [client @clients]
-            (send! channel (json/write-str (game :universe)) (over? game)))
-          (Thread/sleep (game :step))
+            (send! channel (json/write-str (:universe game)) (over? game)))
+          (Thread/sleep (:step game))
           (if (not (over? game)) (recur)))))
       (on-receive channel (fn [data] (println (str data))))
     )))
@@ -44,7 +45,6 @@
 (defroutes all-routes
   (GET "/join/:id" [id] (connect-to-game-id id))     ;; websocket
   (ANY "*" [] (route/not-found (slurp (io/resource "404.html")))))
-
 
 (defn in-dev? [] (env :dev)) ;; TODO read a config variable from command line, env, or file?
 
