@@ -3,14 +3,14 @@
   :url "http://espaco-guerra-engine.herokuapp.com"
   :license {:name "Apache License v2.0"
   :url "http://www.apache.org/licenses/LICENSE-2.0"}
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
     [javax.servlet/servlet-api "2.5"]
-    [compojure "1.3.1"]
-    [ring/ring-devel "1.3.2"]
-    [ring/ring-core "1.3.2"]
-    [http-kit "2.0.0"]
-    [environ "1.0.0"]
-    [org.clojure/data.json "0.2.5"]]
+    [compojure "1.4.0"]
+    [ring/ring-devel "1.4.0"]
+    [ring/ring-core "1.4.0"]
+    [http-kit "2.1.19"]
+    [environ "1.0.1"]
+    [org.clojure/data.json "0.2.6"]]
   :dev-dependencies [[com.jakemccrary/lein-test-refresh "0.5.5"]
     [lein-cloverage "1.0.2"]]
   :main engine-server.web
