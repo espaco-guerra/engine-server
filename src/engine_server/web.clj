@@ -1,4 +1,5 @@
 (ns engine-server.web
+  (:gen-class)
   (:use org.httpkit.server engine-server.game)
   (:require
     [ring.middleware.reload :as reload]
