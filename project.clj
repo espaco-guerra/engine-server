@@ -3,7 +3,7 @@
   :url "http://espaco-guerra-engine.herokuapp.com"
   :license {:name "Apache License v2.0"
   :url "http://www.apache.org/licenses/LICENSE-2.0"}
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
     [javax.servlet/servlet-api "2.5"]
     [compojure "1.4.0"]
     [ring/ring-devel "1.4.0"]
