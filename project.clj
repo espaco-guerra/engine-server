@@ -9,7 +9,7 @@
     [ring/ring-devel "1.4.0"]
     [ring/ring-core "1.4.0"]
     [http-kit "2.1.19"]
-    [environ "1.0.1"]
+    [environ "1.0.2"]
     [org.clojure/data.json "0.2.6"]]
   :dev-dependencies [[com.jakemccrary/lein-test-refresh "0.5.5"]
     [lein-cloverage "1.0.2"]]
