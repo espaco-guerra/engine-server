@@ -5,7 +5,7 @@
   :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [[org.clojure/clojure "1.8.0"]
     [javax.servlet/servlet-api "2.5"]
-    [compojure "1.4.0"]
+    [compojure "1.5.0"]
     [ring/ring-devel "1.4.0"]
     [ring/ring-core "1.4.0"]
     [http-kit "2.1.19"]
@@ -16,8 +16,7 @@
   :main engine-server.web
   :aot [engine-server.web]
   :min-lein-version "2.0.0"
-  :plugins [[environ/environ.lein "0.3.1"]]
-  :hooks [environ.leiningen.hooks]
+  :plugins [[lein-environ "1.0.2"]]
   :uberjar-name "espaco-guerra-engine-standalone.jar"
   :profiles {:production {:env {:production true}}
     :dev {:plugins [[com.jakemccrary/lein-test-refresh "0.5.5"]
