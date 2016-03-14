@@ -14,7 +14,7 @@
   :dev-dependencies [[com.jakemccrary/lein-test-refresh "0.5.5"]
     [lein-cloverage "1.0.2"]]
   :main engine-server.web
-  :aot [engine-server.web]
+  ;:aot [engine-server.web]
   :min-lein-version "2.0.0"
   :plugins [[environ/environ.lein "0.3.1"]]
   :hooks [environ.leiningen.hooks]
