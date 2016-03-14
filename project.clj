@@ -22,5 +22,6 @@
   :profiles {:production {:env {:production true}}
     :dev {:plugins [[com.jakemccrary/lein-test-refresh "0.5.5"]
     [lein-cloverage "1.0.2"]]}
-    :uberjar {:aot :all}}
+    ;:uberjar {:aot :all}
+  }
   :test-refresh {:notify-command ["terminal-notifier" "-title" "Engine Server Tests" "-message"]})
