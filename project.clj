@@ -8,7 +8,7 @@
     [compojure "1.5.1"]
     [ring/ring-devel "1.5.0"]
     [ring/ring-core "1.5.0"]
-    [http-kit "2.1.19"]
+    [http-kit "2.2.0"]
     [environ "1.0.3"]
     [org.clojure/data.json "0.2.6"]]
   :main engine-server.web
