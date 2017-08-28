@@ -4,10 +4,10 @@
   :license {:name "Apache License v2.0"
   :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-    [javax.servlet/javax.servlet-api "3.1.0"]
-    [compojure "1.5.1"]
-    [ring/ring-devel "1.5.0"]
-    [ring/ring-core "1.5.0"]
+    [javax.servlet/javax.servlet-api "4.0.0"]
+    [compojure "1.6.0"]
+    [ring/ring-devel "1.6.2"]
+    [ring/ring-core "1.6.2"]
     [http-kit "2.2.0"]
     [environ "1.1.0"]
     [org.clojure/data.json "0.2.6"]]
